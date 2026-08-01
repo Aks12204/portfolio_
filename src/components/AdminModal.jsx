@@ -118,6 +118,17 @@ export const AdminModal = () => {
     }
   }, [editingItemData, activeAdminTab]);
 
+  useEffect(() => {
+    if (isAdminOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isAdminOpen]);
+
   if (!isAdminOpen) return null;
 
   // Handle Admin Security Login
