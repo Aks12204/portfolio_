@@ -324,7 +324,6 @@ export const AdminModal = () => {
                 <h3 style={{ fontSize: '1.4rem', fontWeight: '700', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>Admin Security Access</h3>
                 <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', marginBottom: '1.75rem' }}>
                   Only the portfolio owner can edit or delete content. Enter your passcode to unlock.
-                  <br /><small style={{ color: 'var(--text-muted)' }}>(Default Passcode: <strong>1234</strong>)</small>
                 </p>
 
                 <form onSubmit={handleAuthSubmit}>
@@ -398,9 +397,6 @@ export const AdminModal = () => {
                   <form onSubmit={handleVerifyOtpReset}>
                     <div style={{ background: 'var(--accent-light)', padding: '0.75rem', borderRadius: 'var(--radius-md)', marginBottom: '1.25rem', fontSize: '0.85rem', color: 'var(--accent)' }}>
                       6-Digit Code sent to <strong>{selectedChannel === 'email' ? recoveryEmail : recoveryPhone}</strong>
-                      {activeOtp && (
-                        <div style={{ marginTop: '0.25rem', fontWeight: '700' }}>[ Test Code: {activeOtp} ]</div>
-                      )}
                     </div>
 
                     <div className="form-group">
@@ -408,7 +404,7 @@ export const AdminModal = () => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="123456"
+                        placeholder="• • • • • •"
                         maxLength={6}
                         value={otpInput}
                         onChange={(e) => setOtpInput(e.target.value)}
@@ -853,7 +849,7 @@ export const AdminModal = () => {
               {activeAdminTab === 'skills' && (
                 <div>
                   <h3 style={{ fontSize: '1.05rem', fontWeight: '700', marginBottom: '1rem' }}>Manage Technical Skills</h3>
-                  
+
                   <form onSubmit={handleAddCategorySubmit} style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem' }}>
                     <input
                       type="text"
@@ -1014,7 +1010,7 @@ export const AdminModal = () => {
               {activeAdminTab === 'security' && (
                 <div>
                   <h3 style={{ fontSize: '1.05rem', fontWeight: '700', marginBottom: '1rem' }}>Admin Security & Passcode Settings</h3>
-                  
+
                   {/* Change Security Passcode */}
                   <form onSubmit={handleChangePinSubmit} style={{ background: 'var(--bg-tertiary)', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', marginBottom: '1.5rem' }}>
                     <div className="form-group">

@@ -10,11 +10,11 @@ export const PortfolioProvider = ({ children }) => {
       if (saved) {
         const parsed = JSON.parse(saved);
         return {
-          profile: { ...defaultPortfolioData.profile, ...parsed.profile },
-          achievements: parsed.achievements || defaultPortfolioData.achievements,
-          projects: parsed.projects || defaultPortfolioData.projects,
-          skills: parsed.skills || defaultPortfolioData.skills,
-          experience: parsed.experience || defaultPortfolioData.experience
+          profile: parsed.profile ? { ...defaultPortfolioData.profile, ...parsed.profile } : defaultPortfolioData.profile,
+          achievements: Array.isArray(parsed.achievements) ? parsed.achievements : defaultPortfolioData.achievements,
+          projects: Array.isArray(parsed.projects) ? parsed.projects : defaultPortfolioData.projects,
+          skills: Array.isArray(parsed.skills) ? parsed.skills : defaultPortfolioData.skills,
+          experience: Array.isArray(parsed.experience) ? parsed.experience : defaultPortfolioData.experience
         };
       }
     } catch (e) {
@@ -390,6 +390,18 @@ export const PortfolioProvider = ({ children }) => {
     showToast('Configuration exported!');
   };
 
+  const downloadDefaultDataJS = () => {
+    const fileContent = `export const defaultPortfolioData = ${JSON.stringify(data, null, 2)};\n`;
+    const dataStr = "data:text/javascript;charset=utf-8," + encodeURIComponent(fileContent);
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", "defaultPortfolioData.js");
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+    showToast('defaultPortfolioData.js exported! Replace src/data/defaultPortfolioData.js in your project and push to GitHub.');
+  };
+
   const importConfigJSON = (jsonString) => {
     try {
       const parsed = JSON.parse(jsonString);
@@ -458,6 +470,7 @@ export const PortfolioProvider = ({ children }) => {
         updateExperience,
         deleteExperience,
         exportConfigJSON,
+        downloadDefaultDataJS,
         importConfigJSON,
         resetToDefaults
       }}
