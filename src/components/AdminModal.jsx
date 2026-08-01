@@ -3,6 +3,35 @@ import { usePortfolio } from '../context/PortfolioContext';
 import { X, User, Award, FolderPlus, Download, Upload, RotateCcw, Plus, Trash2, Check, Sparkles, Lock, LogOut, KeyRound, Edit3, Smartphone, Mail, ShieldCheck, ArrowLeft } from 'lucide-react';
 import '../styles/admin.css';
 
+class ModalErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error("Modal Error:", error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '2rem', textAlign: 'center' }}>
+          <h3 style={{ color: '#ef4444', marginBottom: '1rem' }}>Something went wrong loading this tab.</h3>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+            {this.state.error?.toString()}
+          </p>
+          <button className="btn btn-primary" onClick={() => this.setState({ hasError: false })}>
+            Try Again
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export const AdminModal = () => {
   const {
     data,
@@ -52,8 +81,52 @@ export const AdminModal = () => {
   const [resetNewPin, setResetNewPin] = useState('');
 
   // Recovery Contact Settings Form State
-  const [contactEmailInput, setContactEmailInput] = useState(recoveryEmail);
-  const [contactPhoneInput, setContactPhoneInput] = useState(recoveryPhone);
+  const [contactEmailInput, setContactEmailInput] = useState(recoveryEmail || '');
+  const [contactPhoneInput, setContactPhoneInput] = useState(recoveryPhone || '');
+
+  const handleDownloadData = () => {
+    try {
+      if (typeof downloadDefaultDataJS === 'function') {
+        downloadDefaultDataJS();
+      } else {
+        const fileContent = `export const defaultPortfolioData = ${JSON.stringify(data, null, 2)};\n`;
+        const blob = new Blob([fileContent], { type: 'text/javascript' });
+        const url = URL.createObjectURL(blob);
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.href = url;
+        downloadAnchor.download = "defaultPortfolioData.js";
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Could not download configuration.');
+    }
+  };
+
+  const handleExportJSON = () => {
+    try {
+      if (typeof exportConfigJSON === 'function') {
+        exportConfigJSON();
+      } else {
+        const fileContent = JSON.stringify(data, null, 2);
+        const blob = new Blob([fileContent], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.href = url;
+        downloadAnchor.download = "portfolio-config.json";
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Could not export JSON.');
+    }
+  };
 
   // Editing state IDs
   const [editingAchId, setEditingAchId] = useState(null);
@@ -509,7 +582,8 @@ export const AdminModal = () => {
               </button>
             </div>
 
-            <div className="admin-content">
+            <ModalErrorBoundary>
+              <div className="admin-content">
               {/* TAB 1: PROFILE SETTINGS */}
               {activeAdminTab === 'profile' && (
                 <form onSubmit={handleProfileSubmit}>
@@ -1071,7 +1145,7 @@ export const AdminModal = () => {
                         <input
                           type="email"
                           className="form-control"
-                          value={contactEmailInput}
+                          value={contactEmailInput || ''}
                           onChange={(e) => setContactEmailInput(e.target.value)}
                           required
                         />
@@ -1084,7 +1158,7 @@ export const AdminModal = () => {
                           type="text"
                           className="form-control"
                           placeholder="+1 (555) 019-2834"
-                          value={contactPhoneInput}
+                          value={contactPhoneInput || ''}
                           onChange={(e) => setContactPhoneInput(e.target.value)}
                           required
                         />
@@ -1107,11 +1181,11 @@ export const AdminModal = () => {
                   </ol>
 
                   <div className="backup-actions">
-                    <button className="btn btn-primary" onClick={downloadDefaultDataJS} style={{ background: 'var(--accent)', color: '#fff' }}>
+                    <button className="btn btn-primary" onClick={handleDownloadData} style={{ background: 'var(--accent)', color: '#fff' }}>
                       <Download size={16} /> Download defaultPortfolioData.js for Vercel
                     </button>
 
-                    <button className="btn btn-secondary" onClick={exportConfigJSON}>
+                    <button className="btn btn-secondary" onClick={handleExportJSON}>
                       <Download size={16} /> Export JSON Config
                     </button>
 
@@ -1131,7 +1205,8 @@ export const AdminModal = () => {
                   </div>
                 </div>
               )}
-            </div>
+              </div>
+            </ModalErrorBoundary>
 
             <div className="admin-footer">
               <button className="btn btn-secondary btn-sm" onClick={logoutAdmin} style={{ color: '#ef4444' }}>
