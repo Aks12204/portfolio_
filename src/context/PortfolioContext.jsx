@@ -378,28 +378,42 @@ export const PortfolioProvider = ({ children }) => {
     }
   };
 
-  // JSON Backup / Export / Import / Reset
   const exportConfigJSON = () => {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", "portfolio-config.json");
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-    showToast('Configuration exported!');
+    try {
+      const fileContent = JSON.stringify(data, null, 2);
+      const blob = new Blob([fileContent], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.href = url;
+      downloadAnchor.download = "portfolio-config.json";
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      showToast('Configuration exported!');
+    } catch (e) {
+      console.error('Export failed', e);
+      showToast('Failed to export configuration.');
+    }
   };
 
   const downloadDefaultDataJS = () => {
-    const fileContent = `export const defaultPortfolioData = ${JSON.stringify(data, null, 2)};\n`;
-    const dataStr = "data:text/javascript;charset=utf-8," + encodeURIComponent(fileContent);
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", "defaultPortfolioData.js");
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-    showToast('defaultPortfolioData.js exported! Replace src/data/defaultPortfolioData.js in your project and push to GitHub.');
+    try {
+      const fileContent = `export const defaultPortfolioData = ${JSON.stringify(data, null, 2)};\n`;
+      const blob = new Blob([fileContent], { type: 'text/javascript' });
+      const url = URL.createObjectURL(blob);
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.href = url;
+      downloadAnchor.download = "defaultPortfolioData.js";
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      showToast('defaultPortfolioData.js exported! Replace src/data/defaultPortfolioData.js in your project and push to GitHub.');
+    } catch (e) {
+      console.error('Download failed', e);
+      showToast('Failed to generate file.');
+    }
   };
 
   const importConfigJSON = (jsonString) => {

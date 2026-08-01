@@ -118,14 +118,28 @@ export const AdminModal = () => {
     }
   }, [editingItemData, activeAdminTab]);
 
+  const closeModal = () => {
+    document.body.style.overflow = '';
+    setIsAdminOpen(false);
+  };
+
   useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    };
+
     if (isAdminOpen) {
       document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
     } else {
       document.body.style.overflow = '';
     }
+
     return () => {
       document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isAdminOpen]);
 
@@ -311,14 +325,14 @@ export const AdminModal = () => {
   };
 
   return (
-    <div className="admin-backdrop" onClick={() => setIsAdminOpen(false)}>
+    <div className="admin-backdrop" onClick={closeModal}>
       <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
         <div className="admin-header">
           <div className="admin-title">
             <Sparkles size={20} color="var(--accent)" />
             <span>Portfolio Admin Studio</span>
           </div>
-          <button className="btn-icon" onClick={() => setIsAdminOpen(false)}>
+          <button className="btn-icon" onClick={closeModal}>
             <X size={20} />
           </button>
         </div>
@@ -1123,7 +1137,7 @@ export const AdminModal = () => {
               <button className="btn btn-secondary btn-sm" onClick={logoutAdmin} style={{ color: '#ef4444' }}>
                 <LogOut size={15} /> Lock Admin Studio
               </button>
-              <button className="btn btn-secondary btn-sm" onClick={() => setIsAdminOpen(false)}>
+              <button className="btn btn-secondary btn-sm" onClick={closeModal}>
                 Close
               </button>
             </div>
