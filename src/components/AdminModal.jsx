@@ -1071,18 +1071,27 @@ export const AdminModal = () => {
                     </button>
                   </form>
 
-                  <h3 style={{ fontSize: '1.05rem', fontWeight: '700', marginBottom: '0.5rem' }}>Save & Backup Portfolio Data</h3>
-                  <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
-                    Export your full portfolio configuration to back it up or save into your repository.
+                  <h3 style={{ fontSize: '1.05rem', fontWeight: '700', marginBottom: '0.5rem' }}>Save & Deploy Permanent Vercel Data</h3>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+                    To make your DP, bio, and portfolio info <strong>permanent for ALL visitors on Vercel</strong> across all tabs and devices:
                   </p>
+                  <ol style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginLeft: '1.2rem', marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                    <li>Click <strong>Download defaultPortfolioData.js</strong> below.</li>
+                    <li>Replace <code>src/data/defaultPortfolioData.js</code> in your project repository with this file.</li>
+                    <li>Push your changes to GitHub (<code>git push</code>). Vercel will deploy your actual details for everyone!</li>
+                  </ol>
 
                   <div className="backup-actions">
-                    <button className="btn btn-primary" onClick={exportConfigJSON}>
-                      <Download size={16} /> Export JSON Config File
+                    <button className="btn btn-primary" onClick={downloadDefaultDataJS} style={{ background: 'var(--accent)', color: '#fff' }}>
+                      <Download size={16} /> Download defaultPortfolioData.js for Vercel
+                    </button>
+
+                    <button className="btn btn-secondary" onClick={exportConfigJSON}>
+                      <Download size={16} /> Export JSON Config
                     </button>
 
                     <label className="btn btn-secondary" style={{ cursor: 'pointer' }}>
-                      <Upload size={16} /> Import JSON Config File
+                      <Upload size={16} /> Import JSON Config
                       <input
                         type="file"
                         accept=".json"
