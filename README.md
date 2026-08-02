@@ -1,16 +1,32 @@
-# React + Vite
+# Developer Portfolio Studio
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A modern, high-performance developer portfolio built with React, Vite, and custom CSS styling. Features full dynamic content management via an integrated Admin Studio.
 
-Currently, two official plugins are available:
+## 👤 Profile Avatar & Image Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+To set your profile picture (DP/Avatar):
+1. Place your profile image inside the `src/assets/` directory (e.g., `src/assets/Avatar.png`).
+2. Point `src/data/defaultPortfolioData.js` to your asset file:
+   ```javascript
+   import defaultAvatar from '../assets/Avatar.png';
+   ```
+3. You can also change your avatar image dynamically at runtime via the **Portfolio Admin Studio** UI.
 
-## React Compiler
+## 🚀 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Dynamic Admin Studio**: Edit profile, achievements, projects, skills, and experience in real-time.
+- **Optimized Local Storage**: Clean storage management and automatic image compression to keep data fast and lightweight.
+- **Responsive & Modern Design**: Dark mode aesthetic with custom glassmorphism and animations.
 
-## Expanding the Oxlint configuration
+## 💻 Local Development
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+```

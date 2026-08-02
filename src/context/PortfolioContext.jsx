@@ -9,8 +9,12 @@ export const PortfolioProvider = ({ children }) => {
       const saved = localStorage.getItem('portfolio_data_v1');
       if (saved) {
         const parsed = JSON.parse(saved);
+        const profile = parsed.profile ? { ...defaultPortfolioData.profile, ...parsed.profile } : defaultPortfolioData.profile;
+        if (profile.avatar && (profile.avatar.length > 200000 || profile.avatar.includes('iVBORw0KGgoAAAANSUhEUgAABwAAAAlWCAYAAABd/8eo'))) {
+          profile.avatar = defaultPortfolioData.profile.avatar;
+        }
         return {
-          profile: parsed.profile ? { ...defaultPortfolioData.profile, ...parsed.profile } : defaultPortfolioData.profile,
+          profile,
           achievements: Array.isArray(parsed.achievements) ? parsed.achievements : defaultPortfolioData.achievements,
           projects: Array.isArray(parsed.projects) ? parsed.projects : defaultPortfolioData.projects,
           skills: Array.isArray(parsed.skills) ? parsed.skills : defaultPortfolioData.skills,
